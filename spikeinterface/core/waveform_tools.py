@@ -16,7 +16,8 @@ from .job_tools import ChunkRecordingExecutor, ensure_n_jobs, _shared_job_kwargs
 from .core_tools import make_shared_array
 
 
-
+##TODO Extract small number of waveforms to estimate the extremum channel.
+##     Then create sparsity_mask to the full waveform extraction much more efficiently
 def extract_waveforms_to_buffers(recording, spikes, unit_ids, nbefore, nafter,
                                  mode='memmap', return_scaled=False, folder=None, dtype=None,
                                  sparsity_mask=None, copy=False, **job_kwargs):
