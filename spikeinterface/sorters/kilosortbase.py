@@ -167,7 +167,7 @@ class KilosortBase:
                     #!/bin/bash
                     {matlab_shell_str}
                     cd "{output_folder}"
-                    matlab -nosplash -nodisplay -r "{cls.sorter_name}_master('{output_folder}', '{sorter_path}')"
+                    matlab.orig -nosplash -nodisplay -r "{cls.sorter_name}_master('{output_folder}', '{sorter_path}')"
                 '''
         shell_script = ShellScript(shell_cmd, script_path=output_folder / f'run_{cls.sorter_name}',
                                    log_path=output_folder / f'{cls.sorter_name}.log', verbose=verbose)

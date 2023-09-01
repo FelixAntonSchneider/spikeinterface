@@ -236,7 +236,7 @@ class IronClustSorter(BaseSorter):
                 shell_cmd = '''
                     #!/bin/bash
                     cd "{tmpdir}"
-                    matlab -nosplash -nodisplay -log -r run_ironclust
+                    matlab.orig -nosplash -nodisplay -log -r run_ironclust
                 '''.format(tmpdir=tmpdir)
 
         shell_script = ShellScript(shell_cmd, script_path=output_folder / f'run_{cls.sorter_name}',
