@@ -130,7 +130,7 @@ class KilosortBase:
         cls._generate_ops_file(recording, params, output_folder, binary_file_path)
 
     @classmethod
-    def _run_from_folder(cls, output_folder, params, verbose):
+    def _run_from_folder(cls, output_folder, params, verbose, **sorter_job_params):
         output_folder = output_folder.absolute()
         if cls.check_compiled():
             shell_cmd = f'''
@@ -166,6 +166,9 @@ class KilosortBase:
                 shell_cmd = f'''
                     #!/bin/bash
                     {matlab_shell_str}
+                    # slurm/sbatch commands
+                    # slurm currently not possible, needs to be installed on gpu-xxl by IT. 
+                    # Will need simpler substitute commands for now.
                     cd "{output_folder}"
                     matlab.orig -nosplash -nodisplay -r "{cls.sorter_name}_master('{output_folder}', '{sorter_path}')"
                 '''

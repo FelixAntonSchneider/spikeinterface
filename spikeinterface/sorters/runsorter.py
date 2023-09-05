@@ -95,6 +95,7 @@ def run_sorter(
     docker_image: Optional[Union[bool, str]] = False,
     singularity_image: Optional[Union[bool, str]] = False,
     with_output: bool = True,
+    sorter_job_kwargs: Optional[dict] = {},
     **sorter_params,
 ):
     """
@@ -116,6 +117,7 @@ def run_sorter(
         verbose=verbose,
         raise_error=raise_error,
         with_output=with_output,
+        sorter_job_kwargs=sorter_job_kwargs
         **sorter_params,
     )
 
@@ -147,7 +149,7 @@ run_sorter.__doc__ = run_sorter.__doc__.format(_common_param_doc)
 
 def run_sorter_local(sorter_name, recording, output_folder=None,
                      remove_existing_folder=True, delete_output_folder=False,
-                     verbose=False, raise_error=True, with_output=True, **sorter_params):
+                     verbose=False, raise_error=True, with_output=True, sorter_job_kwargs={}, **sorter_params):
     if isinstance(recording, list):
         raise Exception(
             'You you want to run several sorters/recordings use run_sorters(...)')
@@ -158,7 +160,7 @@ def run_sorter_local(sorter_name, recording, output_folder=None,
     output_folder = SorterClass.initialize_folder(
         recording, output_folder, verbose, remove_existing_folder)
     SorterClass.set_params_to_folder(
-        recording, output_folder, sorter_params, verbose)
+        recording, output_folder, sorter_job_kwargs, sorter_params, verbose)
     SorterClass.setup_recording(recording, output_folder, verbose=verbose)
     SorterClass.run_from_folder(output_folder, raise_error, verbose)
     if with_output:

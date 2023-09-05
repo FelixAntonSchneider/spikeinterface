@@ -155,7 +155,7 @@ class BaseSorter:
         return p
 
     @classmethod
-    def set_params_to_folder(cls, recording, output_folder, new_params, verbose):
+    def set_params_to_folder(cls, recording, output_folder, job_params, new_params, verbose):
         params = cls.default_params()
 
         # verify params are in list
@@ -175,16 +175,17 @@ class BaseSorter:
             print(f"Warning! The recording is already filtered, but {cls.sorter_name} filter is enabled")
 
         # dump parameters inside the folder with json
-        cls._dump_params(recording, output_folder, params, verbose)
+        cls._dump_params(recording, output_folder, job_params, params, verbose)
 
         return params
 
     @classmethod
-    def _dump_params(cls, recording, output_folder, sorter_params, verbose):
+    def _dump_params(cls, recording, output_folder, job_params, sorter_params, verbose):
         with (output_folder / 'spikeinterface_params.json').open(mode='w', encoding='utf8') as f:
             all_params = dict()
             all_params['sorter_name'] = cls.sorter_name
             all_params['sorter_params'] = sorter_params
+            all_params['sorter_job_params'] = job_params
             json.dump(check_json(all_params), f, indent=4)
 
     @classmethod
@@ -205,6 +206,7 @@ class BaseSorter:
               params = json.load(f)
         sorter_params = params['sorter_params']
         sorter_name = params['sorter_name']
+        sorter_job_kwargs = params['sorter_job_params']
 
         from .sorterlist import sorter_dict
         SorterClass = sorter_dict[sorter_name]
@@ -222,7 +224,7 @@ class BaseSorter:
         t0 = time.perf_counter()
 
         try:
-            SorterClass._run_from_folder(output_folder, sorter_params, verbose)
+            SorterClass._run_from_folder(output_folder, sorter_params, verbose, **sorter_job_kwargs)
             t1 = time.perf_counter()
             run_time = float(t1 - t0)
             has_error = False
