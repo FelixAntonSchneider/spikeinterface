@@ -117,7 +117,7 @@ def run_sorter(
         verbose=verbose,
         raise_error=raise_error,
         with_output=with_output,
-        sorter_job_kwargs=sorter_job_kwargs
+        sorter_job_kwargs=sorter_job_kwargs,
         **sorter_params,
     )
 
