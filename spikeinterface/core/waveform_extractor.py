@@ -870,7 +870,7 @@ class WaveformExtractor:
         The results is cache in memory as 3d ndarray (nunits, nsamples, nchans)
         and also saved as npy file in the folder to avoid recomputation each time.
         """
-        # TODO : run this in parralel
+        # TODO : run this in parallel
 
         unit_ids = self.unit_ids
         num_chans = self.get_num_channels()

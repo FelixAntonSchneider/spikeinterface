@@ -18,6 +18,7 @@ from .core_tools import make_shared_array
 
 ##TODO Extract small number of waveforms to estimate the extremum channel.
 ##     Then create sparsity_mask to the full waveform extraction much more efficiently
+##     This should be fairly easy, when the functions work on a per unit basis
 def extract_waveforms_to_buffers(recording, spikes, unit_ids, nbefore, nafter,
                                  mode='memmap', return_scaled=False, folder=None, dtype=None,
                                  sparsity_mask=None, copy=False, **job_kwargs):
@@ -99,6 +100,77 @@ def extract_waveforms_to_buffers(recording, spikes, unit_ids, nbefore, nafter,
 extract_waveforms_to_buffers.__doc__ = extract_waveforms_to_buffers.__doc__.format(_shared_job_kwargs_doc)
 
 
+def allocate_unit_waveform_buffer(recording, spikes, unit_id, nbefore, nafter, mode='memmap', folder=None, dtype=None,
+                                  sparsity_mask=None):
+
+    """
+    Allocate memmap or shared memory buffer for extracting waveforms of a single unit
+
+    Parameters
+    ----------
+    recording: recording
+        The recording object
+    spikes: 1d numpy array with several fields
+        Spikes handled as a unique vector.
+        This vector can be obtained with: `spikes = Sorting.to_spike_vector()`
+    unit_id: int
+        Index of unit
+    nbefore: int
+        N samples before spike
+    nafter: int
+        N samples after spike
+    mode: str
+        Mode to use ('memmap' | 'shared_memory')
+    folder: str or path
+        In case of memmap mode, folder to save npy files
+    dtype: numpy.dtype
+        dtype for waveforms buffer
+    sparsity_mask: None or array of bool
+        If not None shape must be must be (len(unit_ids), len(channel_ids)
+
+    Returns
+    -------
+    wfs_array: numpy.ndarray
+        Array for single unit(memmap or shared_memmep
+    wfs_arrays_info: dict of info
+        Dictionary to "construct" array in workers process (memmap file or sharemem)
+    """
+    nsamples = nbefore + nafter
+
+    dtype = np.dtype(dtype)
+    if mode == 'shared_memory':
+        assert folder is None
+    else:
+        folder = Path(folder)
+
+    nspikes = np.sum(spikes['unit_ind']==unit_id)
+    if sparsity_mask is None:
+        num_chans = recording.get_num_channels()
+    else:
+        num_chans = np.sum(sparsity_mask[unit_ind, :])
+
+    shape = (nspikes,nsamples,num_chans)
+
+    if mode == 'memmap':
+        filename = str(folder / f'waveforms_{unit_id}.npy')
+        wfs_arr = np.lib.format.open_memmap(
+            filename, mode='w+', dtype=dtype, shape=shape)
+        wfs_arr_info = {unit_id:filename}
+    elif mode == 'shared_memory':
+        if n_spikes == 0:
+            wfs_arr = np.zeros(shape, dtype=dtype)
+            shm = None
+            shm_name = None
+        else:
+            wfs_arr, shm = make_shared_array(shape, dtype)
+            shm_name = shm.name
+        wfs_arr_info = {unit_id:(shm, shm_name, dtype.str, shape)}
+    else:
+        raise ValueError('allocate_waveforms_buffers bad mode')
+
+    return wfs_arr, wfs_arr_info
+
+
 def allocate_waveforms_buffers(recording, spikes, unit_ids, nbefore, nafter, mode='memmap', folder=None, dtype=None,
                                sparsity_mask=None):
     """
@@ -176,7 +248,6 @@ def allocate_waveforms_buffers(recording, spikes, unit_ids, nbefore, nafter, mod
             raise ValueError('allocate_waveforms_buffers bad mode')
 
     return wfs_arrays, wfs_arrays_info
-
 
 def distribute_waveforms_to_buffers(recording, spikes, unit_ids, wfs_arrays_info, nbefore, nafter, return_scaled,
                                     mode='memmap', sparsity_mask=None, **job_kwargs):
