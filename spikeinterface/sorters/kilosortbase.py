@@ -173,9 +173,9 @@ class KilosortBase:
                 # init matlab command
                 matlab_command = f'''\nmatlab.orig -nodisplay -nosplash -r "'''
                 if sorter_job_params:
-                    if 'memory_limit' in sorter_job_params.keys:
+                    if 'memory_limit' in sorter_job_params.keys():
                         shell_cmd += f'''\nulimit -v {sorter_job_params['memory_limit']}'''
-                    if 'gpuDevice' in sorter_job_params.keys:
+                    if 'gpuDevice' in sorter_job_params.keys():
                         matlab_command += f'''gpuDevice({sorter_job_params['gpuDevice']});'''
 
                 # finish matlab command
