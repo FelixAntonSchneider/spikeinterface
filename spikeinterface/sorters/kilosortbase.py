@@ -165,11 +165,11 @@ class KilosortBase:
                     matlab_shell_str = ""
 
                 # init shell command
-                shell_cmd = f'''
+                shell_cmd = f"""
                     #!/bin/bash
                     {matlab_shell_str}
                     cd "{output_folder}"
-                    '''
+                    """
                 # init matlab command
                 matlab_command = f'''\nmatlab.orig -nodisplay -nosplash -r "'''
                 if sorter_job_params:
