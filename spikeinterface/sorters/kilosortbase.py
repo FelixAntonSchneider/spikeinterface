@@ -163,15 +163,26 @@ class KilosortBase:
                     '''
                 else:
                     matlab_shell_str = ""
+
+                # init shell command
                 shell_cmd = f'''
                     #!/bin/bash
                     {matlab_shell_str}
-                    # slurm/sbatch commands
-                    # slurm currently not possible, needs to be installed on gpu-xxl by IT. 
-                    # Will need simpler substitute commands for now.
                     cd "{output_folder}"
-                    matlab.orig -nosplash -nodisplay -r "{cls.sorter_name}_master('{output_folder}', '{sorter_path}')"
-                '''
+                    '''
+                # init matlab command
+                matlab_command = f'''\nmatlab.orig -nodisplay -nosplash -r "'''
+                if sorter_job_params:
+                    if 'memory_limit' in sorter_job_params.keys:
+                        shell_cmd += f'''\nulimit -v {sorter_job_params['memory_limit']}'''
+                    if 'gpuDevice' in sorter_job_params.keys:
+                        matlab_command += f'''gpuDevice({sorter_job_params['gpuDevice']});'''
+
+                # finish matlab command
+                matlab_command += f'''{cls.sorter_name}_master('{output_folder}', '{sorter_path}')"'''
+                # fuse shell_cmd
+                shell_cmd += matlab_command
+
         shell_script = ShellScript(shell_cmd, script_path=output_folder / f'run_{cls.sorter_name}',
                                    log_path=output_folder / f'{cls.sorter_name}.log', verbose=verbose)
         shell_script.start()
