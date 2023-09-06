@@ -182,6 +182,7 @@ class KilosortBase:
                 matlab_command += f'''{cls.sorter_name}_master('{output_folder}', '{sorter_path}')"'''
                 # fuse shell_cmd
                 shell_cmd += matlab_command
+                print(shell_cmd)
 
         shell_script = ShellScript(shell_cmd, script_path=output_folder / f'run_{cls.sorter_name}',
                                    log_path=output_folder / f'{cls.sorter_name}.log', verbose=verbose)
