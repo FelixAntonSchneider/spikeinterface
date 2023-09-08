@@ -172,6 +172,7 @@ class KilosortBase:
                 if sorter_job_params:
                     if 'memory_limit' in sorter_job_params.keys():
                         shell_cmd += f'''\nulimit -v {int(sorter_job_params['memory_limit'])}'''
+                        shell_cmd += '\nexport MALLOC_ARENA_MAX=4'
                     if 'gpuDevice' in sorter_job_params.keys():
                         matlab_command += f'''gpuDevice({sorter_job_params['gpuDevice']});'''
 
