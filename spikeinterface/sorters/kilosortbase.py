@@ -181,12 +181,11 @@ class KilosortBase:
                 # fuse shell_cmd
                 shell_cmd += matlab_command
                 print(shell_cmd)
-        pdb.set_trace()
+
         shell_script = ShellScript(shell_cmd, script_path=output_folder / f'run_{cls.sorter_name}',
                                    log_path=output_folder / f'{cls.sorter_name}.log', verbose=verbose)
-        pdb.set_trace()
+
         shell_script.start()
-        pdb.set_trace()
         retcode = shell_script.wait()
 
         if retcode != 0:
