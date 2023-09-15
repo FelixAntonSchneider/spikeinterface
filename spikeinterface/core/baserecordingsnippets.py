@@ -147,9 +147,9 @@ class BaseRecordingSnippets(BaseExtractor):
 
         # create recording : channel slice or clone or self
         if in_place:
-            if not np.array_equal(new_channel_ids, self.get_channel_ids()):
-                raise Exception(
-                    'set_probe(inplace=True) must have all channel indices')
+            #if not np.array_equal(new_channel_ids, self.get_channel_ids()):
+                #raise Exception(
+                #    'set_probe(inplace=True) must have all channel indices')
             sub_recording = self
         else:
             if np.array_equal(new_channel_ids, self.get_channel_ids()):
