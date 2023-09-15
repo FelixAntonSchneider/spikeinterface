@@ -204,6 +204,8 @@ class Kilosort2_5Sorter(KilosortBase, BaseSorter):
 
         # drift correction
         ops['do_correction'] = params['do_correction']
+        if 'recording_path' is in params.keys():
+            ops['fbinary'] = params['recording_path']
 
         ## option for wavelength
         ops['nt0'] = params['wave_length'] # size of the waveform extracted around each detected peak. Be sure to make it odd to make alignment easier.
