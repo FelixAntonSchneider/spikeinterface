@@ -17,7 +17,11 @@ function kilosort2_5_master(fpath, kilosortPath)
         load(fullfile(fpath, 'ops.mat'));
 
         % preprocess data to create temp_wh.dat
-        rez = preprocessDataSub(ops);
+        if ~isfile(ops.fproc);
+            rez = preprocessDataSub(ops);
+        else;
+            fprintf('data already preprocessed. Skipping'
+        end
 
         % NEW STEP TO DO DATA REGISTRATION
         if isfield(ops, 'do_correction')

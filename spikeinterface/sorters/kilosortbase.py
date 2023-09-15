@@ -96,7 +96,8 @@ class KilosortBase:
 
         ops['datatype'] = 'dat'  # binary ('dat', 'bin') or 'openEphys'
         ops['fbinary'] = str(binary_file_path.absolute())  # will be created for 'openEphys'
-        ops['fproc'] = str((output_folder / 'temp_wh.dat').absolute())  # residual from RAM of preprocessed data
+        origin_folder = Path(binary_file_path.absolute()).parent
+        ops['fproc'] = str((origin_folder / 'temp_wh.dat').absolute())  # residual from RAM of preprocessed data
         ops['root'] = str(output_folder.absolute())  # 'openEphys' only: where raw files are
         ops['trange'] = [0, np.Inf] #  time range to sort
         ops['chanMap'] = str((output_folder / 'chanMap.mat').absolute())
@@ -184,8 +185,11 @@ class KilosortBase:
                     if 'gpuDevice' in sorter_job_params.keys():
                         matlab_command += f'''gpuDevice({sorter_job_params['gpuDevice']});'''
 
-                # finish matlab command
-                matlab_command += f'''{cls.sorter_name}_master('{output_folder}', '{sorter_path}')"'''
+                    # finish matlab command
+                    if not sorter_job_params['preprocessing_only']:
+                        matlab_command += f'''{cls.sorter_name}_master('{output_folder}', '{sorter_path}')"'''
+                    else:
+                        matlab_command += f'''{cls.sorter_name}_preprocessing('{output_folder}', '{sorter_path}')"'''
                 # fuse shell_cmd
                 shell_cmd += matlab_command
                 print(shell_cmd)
