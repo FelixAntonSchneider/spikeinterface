@@ -20,7 +20,7 @@ function kilosort2_5_master(fpath, kilosortPath)
         if ~isfile(ops.fproc);
             rez = preprocessDataSub(ops);
         else;
-            fprintf('data already preprocessed. Skipping'
+            fprintf('data already preprocessed. Skipping');
         end
 
         % NEW STEP TO DO DATA REGISTRATION

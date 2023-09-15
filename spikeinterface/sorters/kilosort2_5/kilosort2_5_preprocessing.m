@@ -1,4 +1,4 @@
-function kilosort2_5_master(fpath, kilosortPath)
+function kilosort2_5_preprocessing(fpath, kilosortPath)
     try
         set(groot,'defaultFigureVisible', 'off');
 
