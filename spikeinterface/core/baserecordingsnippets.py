@@ -132,18 +132,18 @@ class BaseRecordingSnippets(BaseExtractor):
         if np.any(~keep):
             warn('The given probes have unconnected contacts: they are removed')
 
-        arr = arr[keep]
-        inds = arr['device_channel_indices']
-        order = np.argsort(inds)
-        inds = inds[order]
-
-        # check
-        if np.max(list(inds) + [0]) >= self.get_num_channels():
-            raise ValueError(
-                'The given Probe have "device_channel_indices" that do not match channel count')
-        new_channel_ids = self.get_channel_ids()[inds]
-        arr = arr[order]
-        arr['device_channel_indices'] = np.arange(arr.size, dtype='int64')
+        # arr = arr[keep]
+        # inds = arr['device_channel_indices']
+        # order = np.argsort(inds)
+        # inds = inds[order]
+        #
+        # # check
+        # if np.max(list(inds) + [0]) >= self.get_num_channels():
+        #     raise ValueError(
+        #         'The given Probe have "device_channel_indices" that do not match channel count')
+        # new_channel_ids = self.get_channel_ids()[inds]
+        # arr = arr[order]
+        # arr['device_channel_indices'] = np.arange(arr.size, dtype='int64')
 
         # create recording : channel slice or clone or self
         if in_place:
