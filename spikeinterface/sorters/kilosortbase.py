@@ -148,6 +148,7 @@ class KilosortBase:
         else:
             source_dir = Path(Path(__file__).parent)
             shutil.copy(str(source_dir / cls.sorter_name / f'{cls.sorter_name}_master.m'), str(output_folder))
+            shutil.copy(str(source_dir / cls.sorter_name / f'{cls.sorter_name}_preprocessing.m'), str(output_folder))
             shutil.copy(str(source_dir / 'utils' / 'writeNPY.m'), str(output_folder))
             shutil.copy(str(source_dir / 'utils' / 'constructNPYheader.m'), str(output_folder))
 
