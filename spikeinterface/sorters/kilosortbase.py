@@ -46,7 +46,11 @@ class KilosortBase:
         if positions.shape[1] != 2:
             raise RuntimeError("3D 'location' are not supported. Set 2D locations instead")
 
-        nchan = recording.get_probe().get_contact_count()
+        device_channels = recording.get_probe().device_channel_indices
+        nchan = sum(device_channels>=0)
+        data_channel_inds = np.argwhere(device_channels>=0)[:,0]
+        positions = positions[data_channel_inds]
+        groups = [1] * nchan
         xcoords = [p[0] for p in positions],
         ycoords = [p[1] for p in positions],
         kcoords = groups,
@@ -85,7 +89,8 @@ class KilosortBase:
         ops = {}
 
         nchanTot = float(recording.get_num_channels())
-        nchan = recording.get_probe().get_contact_count()
+        device_channels = recording.get_probe().device_channel_indices
+        nchan = sum(device_channels >= 0)
         ops['NchanTOT'] = nchanTot  # total number of channels (omit if already in chanMap file)
         ops['Nchan'] = nchan  # number of active channels (omit if already in chanMap file)
 
