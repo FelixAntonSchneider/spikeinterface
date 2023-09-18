@@ -17,9 +17,14 @@ function kilosort2_5_preprocessing(fpath, kilosortPath)
         load(fullfile(fpath, 'ops.mat'));
 
         % preprocess data to create temp_wh.dat
-        rez = preprocessDataSub(ops);
-        maindir = fileparts(ops.fproc)
-        save(fullfile(maindir,'rez.mat'), 'rez')
+
+        if ~isfile(ops.fproc);
+            rez = preprocessDataSub(ops);
+            maindir = fileparts(ops.fproc)
+            save(fullfile(maindir,'rez.mat'), 'rez')
+        else;
+            fprintf('data already preprocessed. Skipping');
+        end
     catch
         fprintf('----------------------------------------');
         fprintf(lasterr());
