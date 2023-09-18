@@ -18,6 +18,8 @@ function kilosort2_5_preprocessing(fpath, kilosortPath)
 
         % preprocess data to create temp_wh.dat
         rez = preprocessDataSub(ops);
+        maindir = fileparts(ops.fproc)
+        save(fullfile(maindir,'rez.mat'), rez)
     catch
         fprintf('----------------------------------------');
         fprintf(lasterr());

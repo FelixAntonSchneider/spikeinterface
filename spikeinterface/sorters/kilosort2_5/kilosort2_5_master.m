@@ -21,6 +21,8 @@ function kilosort2_5_master(fpath, kilosortPath)
             rez = preprocessDataSub(ops);
         else;
             fprintf('data already preprocessed. Skipping');
+            maindir = fileparts(ops.fproc)
+            load(fullfile(maindir,'rez.mat'))
         end
 
         % NEW STEP TO DO DATA REGISTRATION
